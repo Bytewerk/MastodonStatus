@@ -12,7 +12,7 @@ Mastodon.create_app('bytewerk_open_status', api_base_url='https://chaos.social',
 
 ### log in once with password
 ```
-mastodon = Mastodon(client_id='clientcred.secret', api_base_url='https://mastodon.social')
+mastodon = Mastodon(client_id='clientcred.secret', api_base_url='https://chaos.social')
 mastodon.log_in('email@example.com', 'incrediblygoodpassword', to_file='usersecret.secret')
 ```
 
