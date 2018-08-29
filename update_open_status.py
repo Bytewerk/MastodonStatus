@@ -3,6 +3,7 @@ from mastodon import Mastodon
 from datetime import datetime
 import requests
 
+INSTANCE_URL = 'https://chaos.social'
 UPDATE_FIELD_NAME = 'Status'
 
 try:
@@ -11,7 +12,7 @@ try:
 except:
 	state = 'unknown'
 
-mastodon = Mastodon(access_token='usersecret.secret', api_base_url='https://chaos.social')
+mastodon = Mastodon(access_token='usersecret.secret', api_base_url=INSTANCE_URL)
 new_fields = []
 for field in mastodon.account_verify_credentials().fields:
 	if field['name'] == UPDATE_FIELD_NAME:
