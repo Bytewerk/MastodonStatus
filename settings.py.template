@@ -1,0 +1,10 @@
+SPACE_API_URL = 'http://stats.bytewerk.org/status.json'
+
+INSTANCE_URL = 'https://chaos.social'
+CLIENT_ID_FILENAME = 'clientcred.secret'
+ACCESS_TOKEN_FILENAME = 'usersecret.secret'
+
+STATE_FIELD_NAME = 'Status'
+STATE_OPEN = 'OPEN'
+STATE_CLOSED = 'closed'
+STATE_UNKNOWN = 'unknown'

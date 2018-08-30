@@ -1,2 +1,5 @@
-clientcred.secret
-usersecret.secret
+.idea
+venv
+*.secret
+settings.py
+__pycache__

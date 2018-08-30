@@ -1,22 +1,34 @@
 #!/usr/bin/python3
-from mastodon import Mastodon
-from datetime import datetime
 import requests
+from datetime import datetime
+from bs4 import BeautifulSoup
+from mastodon import Mastodon
+from settings import *
 
-INSTANCE_URL = 'https://chaos.social'
 
-try:
-	json = requests.get('http://stats.bytewerk.org/status.json').json()
-	state = datetime.fromtimestamp(json['state']['lastchange']).strftime('OPEN since %H:%M') if json['state']['open'] else 'closed'
-except:
-	state = 'unknown'
+def get_state_text():
+    try:
+        json = requests.get(SPACE_API_URL).json()
+        is_open = json['state']['open']
+        state_text = STATE_OPEN if is_open else STATE_CLOSED
 
-mastodon = Mastodon(access_token='usersecret.secret', api_base_url=INSTANCE_URL)
-fields = [
-	('Location', 'Krumenauerstr. 54 / Ingolstadt / Germany'),
-	('Visit us', 'Wednesday, 19:00+ (and most other evenings)'),
-	('IRC', '#bytewerk @ freenode'),
-	('Status', state)
-]
-mastodon.account_update_credentials(fields=fields)
+        last_change = json['state'].get('lastchange')
+        if last_change is not None:
+            timestamp = datetime.fromtimestamp(last_change)
+            return timestamp.strftime(state_text)
+        else:
+            return state_text
+    except:
+        return STATE_UNKNOWN
 
+
+mastodon = Mastodon(access_token=ACCESS_TOKEN_FILENAME, api_base_url=INSTANCE_URL)
+updated_fields = []
+for field in mastodon.account_verify_credentials().fields:
+    if field['name'] == STATE_FIELD_NAME:
+        updated_fields.append((STATE_FIELD_NAME, get_state_text()))
+    else:
+        soup = BeautifulSoup(field['value'], 'html.parser')
+        updated_fields.append((field['name'], soup.get_text()))
+
+mastodon.account_update_credentials(fields=updated_fields)
